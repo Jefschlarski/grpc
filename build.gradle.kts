@@ -34,7 +34,7 @@ dependencies {
     runtimeOnly("com.h2database:h2")
     testImplementation("org.mockito:mockito-core:4.0.0")
     runtimeOnly("org.yaml:snakeyaml")
-
+    testImplementation("io.micronaut.flyway:micronaut-flyway:6.2.0")
 }
 
 
