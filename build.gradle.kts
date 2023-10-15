@@ -30,11 +30,12 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
     runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
-    runtimeOnly("com.h2database:h2")
     testImplementation("org.mockito:mockito-core:4.0.0")
     runtimeOnly("org.yaml:snakeyaml")
     testImplementation("io.micronaut.flyway:micronaut-flyway:6.2.0")
+    testRuntimeOnly("com.h2database:h2")
 }
 
 

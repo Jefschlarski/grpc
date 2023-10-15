@@ -2,6 +2,7 @@ package com.example.produtos.services.impl
 
 import com.example.produtos.domain.Product
 import com.example.produtos.dto.ProductReq
+import com.example.produtos.dto.ProductRes
 import com.example.produtos.dto.ProductUpdateReq
 import com.example.produtos.exceptions.AlreadyExistsException
 import com.example.produtos.exceptions.ProductNotFoundException
@@ -14,6 +15,10 @@ import java.util.*
 internal class ProductServiceImplTest {
     private val productRepository = Mockito.mock(ProductRepository::class.java)
     private val productServices = ProductServiceImpl(productRepository)
+
+
+
+//=======================================TESTE METODO CREATE ===========================================================================================================
 
 
     //TESTE DO RETORNO DO METODO CREATE CASO SUCESSO
@@ -40,6 +45,11 @@ internal class ProductServiceImplTest {
         val productReq = ProductReq(name = "product name", price = 10.00, stock = 5)
         Assertions.assertThrowsExactly(AlreadyExistsException::class.java){productServices.create(productReq)}
     }
+
+
+//=======================================TESTE METODO FINDBYID===========================================================================================================
+
+
     //TESTE DO RETORNO DO METODO FINDYBYID
     @Test
     fun `when findById method is call with existing id a ProductRes is returned`(){
@@ -59,6 +69,8 @@ internal class ProductServiceImplTest {
         val id = 1L
         Assertions.assertThrowsExactly(ProductNotFoundException::class.java){productServices.findById(id)}
     }
+
+//=======================================TESTE METODO UPDATE===========================================================================================================
 
     //TESTE DE EXCEÇÕES DO METODO UPDATE VALIDAÇAO DO NOME
     @Test
@@ -90,5 +102,50 @@ internal class ProductServiceImplTest {
         val productUpdateReq = ProductUpdateReq(id= 1, name = "update name", price = 10.00, stock = 5)
         val productRes = productServices.update(productUpdateReq)
         Assertions.assertEquals(productUpdateReq.name, productRes.name )
+    }
+
+//=======================================TESTE METODO DELETE===========================================================================================================
+
+    @Test
+    fun `when delete method is call with valid id a Product is deleted`(){
+        val id = 1L
+        val productOut = Product(id = 1, name = "product name", price = 10.00, stock = 5)
+
+        Mockito.`when`(productRepository.findById(id)).thenReturn(Optional.of(productOut))
+
+        Assertions.assertDoesNotThrow {productServices.delete(id)}
+    }
+
+    @Test
+    fun `when delete method is call with invalid id throws ProductNotFoundException`(){
+        val id = 1L
+
+        Mockito.`when`(productRepository.findById(id)).thenReturn(Optional.empty())
+
+        Assertions.assertThrowsExactly(ProductNotFoundException::class.java) {productServices.delete(id)}
+    }
+
+//=======================================TESTE METODO FINDALL===========================================================================================================
+
+    @Test
+    fun `when findAll method is call with valid data a List of ProductRes is returned`(){
+        val productList = listOf(Product(id = 1, name = "product name", price = 10.00, stock = 5))
+
+        Mockito.`when`(productRepository.findAll()).thenReturn(productList)
+
+        val productRes = productServices.findAll()
+
+        Assertions.assertEquals(productList[0].name, productRes[0].name )
+    }
+
+    @Test
+    fun `when findAll method is call without products a emptyList of ProductRes is returned`(){
+        val productList = emptyList<ProductRes>()
+
+        Mockito.`when`(productRepository.findAll()).thenReturn(emptyList())
+
+        val productRes = productServices.findAll()
+
+        Assertions.assertEquals(productList.size, productRes.size )
     }
 }

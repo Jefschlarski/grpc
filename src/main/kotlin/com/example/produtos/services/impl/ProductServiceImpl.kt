@@ -26,6 +26,11 @@ class ProductServiceImpl(private val productRepository: ProductRepository) : Pro
         return findById.get().toProductRes()
     }
 
+    override fun findAll(): List<ProductRes> {
+        val findAll = productRepository.findAll()
+        return findAll.map {it.toProductRes()}
+    }
+
     override fun update(req: ProductUpdateReq): ProductRes {
         verifyName(req.name)
        val product = productRepository.findById(req.id).orElseThrow{ProductNotFoundException(req.id)}
@@ -34,6 +39,11 @@ class ProductServiceImpl(private val productRepository: ProductRepository) : Pro
               price = req.price,
               stock = req.stock)
         return productRepository.update(copy).toProductRes()
+    }
+
+    override fun delete(id: Long) {
+        val product = productRepository.findById(id).orElseThrow{ProductNotFoundException(id)}
+        productRepository.delete(product)
     }
 
     private fun verifyName(name: String){

@@ -7,11 +7,20 @@ package com.example.produtos;
 
 service ProductService {
   rpc Create (ProductServiceRequest) returns (ProductServiceResponse) {}
-  rpc FindById(FindByIdServiceRequest) returns (ProductServiceResponse){}
+  rpc FindById(RequestById) returns (ProductServiceResponse){}
+  rpc FindAll(Empty) returns(ProductsList){}
   rpc Update(ProductServiceUpdateRequest) returns (ProductServiceResponse){}
+  rpc Delete(RequestById) returns (Empty){}
 }
 
-message FindByIdServiceRequest{
+message Empty{}
+
+message ProductsList{
+  //define que Products sera uma list de ProductServiceResponse
+  repeated ProductServiceResponse products = 1;
+}
+
+message RequestById{
   int64 id = 1;
 }
 
